@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitness Tracker App</title>
+  <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  input {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  
+  ul {
+    list-style: none;
+    margin-top: 20px;
+  }
+  
+  li {
+    background-color: #f1f1f1;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .progress-section {
+    margin-top: 30px;
+    text-align: center;
+  }
+  </style>
+  <script>
+    // Initialize workout data
+let workouts = [];
+
+// Set fitness goal
+function setGoal() {
+  const goal = document.getElementById('fitnessGoal').value;
+  document.getElementById('currentGoal').textContent = `Current Goal: ${goal}`;
+  document.getElementById('fitnessGoal').value = '';
+}
+
+// Record workout
+function recordWorkout() {
+  const workoutType = document.getElementById('workoutType').value;
+  const workoutDuration = document.getElementById('workoutDuration').value;
+  const workoutDate = document.getElementById('workoutDate').value;
+
+  if (workoutType && workoutDuration && workoutDate) {
+    const workout = {
+      type: workoutType,
+      duration: workoutDuration,
+      date: workoutDate,
+    };
+
+    workouts.push(workout);
+
+    // Update workout list
+    updateWorkoutList();
+
+    // Clear inputs
+    document.getElementById('workoutType').value = '';
+    document.getElementById('workoutDuration').value = '';
+    document.getElementById('workoutDate').value = '';
+  } else {
+    alert('Please fill in all workout details.');
+  }
+}
+
+// Update the displayed workout list
+function updateWorkoutList() {
+  const workoutList = document.getElementById('workoutList');
+  workoutList.innerHTML = '';
+
+  workouts.forEach((workout, index) => {
+    const workoutItem = document.createElement('li');
+    workoutItem.textContent = `${workout.type} - ${workout.duration} mins on ${workout.date}`;
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.style.marginLeft = '10px';
+    deleteButton.onclick = () => deleteWorkout(index);
+    workoutItem.appendChild(deleteButton);
+    workoutList.appendChild(workoutItem);
+  });
+}
+
+// Delete workout
+function deleteWorkout(index) {
+  workouts.splice(index, 1);
+  updateWorkoutList();
+}
+
+// View progress (total workouts and duration)
+function viewProgress() {
+  const progressDiv = document.getElementById('progress');
+  const totalWorkouts = workouts.length;
+  const totalDuration = workouts.reduce((total, workout) => total + Number(workout.duration), 0);
+
+  progressDiv.innerHTML = `
+    <p>Total Workouts: ${totalWorkouts}</p>
+    <p>Total Duration: ${totalDuration} mins</p>
+    `;
+}
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Fitness Tracker</h1>
+
+    <!-- Section for setting fitness goals -->
+    <section class="goals-section">
+      <h2>Set Your Fitness Goal</h2>
+      <input type="text" id="fitnessGoal" placeholder="Enter your fitness goal">
+      <button onclick="setGoal()">Set Goal</button>
+      <p id="currentGoal"></p>
+    </section>
+
+    <!-- Section for recording workouts -->
+    <section class="workouts-section">
+      <h2>Record Your Workout</h2>
+      <input type="text" id="workoutType" placeholder="Workout type (e.g., Running)">
+      <input type="number" id="workoutDuration" placeholder="Duration (mins)">
+      <input type="date" id="workoutDate">
+      <button onclick="recordWorkout()">Add Workout</button>
+      <ul id="workoutList"></ul>
+    </section>
+
+    <!-- Section for viewing progress -->
+    <section class="progress-section">
+      <h2>Your Workout Progress</h2>
+      <button onclick="viewProgress()">View Progress</button>
+      <div id="progress"></div>
+    </section>
+  </div>
+
+</body>
+</html>
